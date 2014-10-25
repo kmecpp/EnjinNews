@@ -1,0 +1,38 @@
+# Configuration File For EnjinNews. Created By, kmecpp
+
+
+# +++++++++++++++++++++++++++++#
+#            Website           #
+# +++++++++++++++++++++++++++++#
+
+news-url: http://yourwebsite.com/home/m/<some-number>/rss/true
+
+# The "news-url" value should be the URL of your news module's RSS feed. 
+# To get this, go to the news module on your Enjin website, scroll to the bottom and click "Subscribe to RSS". 
+# Then copy the URL of the page that it brings you to.
+
+
+# Alternate Settings
+# ---------------------------------------------
+
+use-seperate-info: false
+
+website-domain: Leave this alone if "use-seperate-info" is set to false
+forum-number: Leave this alone if "use-seperate-info" is set to false
+news-module-page: Leave this alone if "use-seperate-info" is set to false
+
+# The "website-domain" value should be the domain of your Enjin website (e.g. yourwebsite.enjin.com)
+# The "forum-number" value should be the number that appears in the URL of all any forum content (e.g. yourwebsite.enjin.com/forums/m/<THIS NUMBER>)
+# The "news-module-page" should be the webpage that your news module can be found at (e.g. If your news module was on "yourwebsite.enjin.com/news", this value should be set to "news" without the quotation marks)
+
+# ALL OF THESE VALUES SHOULD BE IGNORED UNLESS "use-seperate-info" IS SET TO TRUE AND YOU ARE NOT SPECIFYING A "news-url" VALUE!
+# ---------------------------------------------
+
+# +++++++++++++++++++++++++++++#
+#            Metrics           #
+# +++++++++++++++++++++++++++++#
+
+# Plugin Metrics Configuration
+# Enabling this will send statistics about the plugin to http://mcstats.org, everything that is collected can be seen on the website here, http://mcstats.org/plugin/EnjinNews.
+
+enable-metrics: true
