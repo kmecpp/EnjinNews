@@ -15,7 +15,7 @@ public class Commands implements CommandExecutor {
 	
 	public static void command(CommandSender sender, String commandLabel, String[] args){
 		if(commandLabel.equalsIgnoreCase("news")){
-			sender.sendMessage(ChatColor.GREEN + plugin.getConfig().getString("news-url"));
+			sender.sendMessage(ChatColor.GREEN + RSS.urlAddress);
 		}
 	}
 	

@@ -18,11 +18,18 @@ public class Main extends JavaPlugin {
 	public void onEnable(){
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " version " + pdfFile.getVersion() + " has been Enabled!");
+		plugin = this;
 		
 		saveDefaultConfig();
 		
+		//Commands
 		getCommand("news").setExecutor(new Commands(this));
 		
+		//Listeners
 		new EventListener(this);
+		new CommandHandler(this);
+		
+		//RSS
+		new RSS(this);
 	}
 }

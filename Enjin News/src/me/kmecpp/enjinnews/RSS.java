@@ -14,11 +14,15 @@ import org.bukkit.entity.Player;
 
 public class RSS {
 	
-	public static String urlAddress = "http://www.rubbervoltz.com/home/m/12924401/rss/true";
-	
-	public RSS(){
+	public Main plugin;
+	public static String urlAddress;
+		
+	public RSS(Main plugin){
+		this.plugin = plugin;
+		urlAddress = plugin.getConfig().getString("news-url");
 		
 	}
+	
 	
 	public static void readRSS(Player player, int number){
 		
