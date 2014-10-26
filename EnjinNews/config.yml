@@ -1,0 +1,21 @@
+# Configuration File For EnjinNews. Created By, kmecpp
+
+
+# +++++++++++++++++++++++++++++#
+#            Website           #
+# +++++++++++++++++++++++++++++#
+
+news-url: http://yourwebsite.com/home/m/<some-number>/rss/true
+
+# The "news-url" value should be the URL of your news module's RSS feed. 
+# To get this, go to the news module on your Enjin website, scroll to the bottom and click "Subscribe to RSS". 
+# Then copy the URL of the page that it brings you to.
+
+# +++++++++++++++++++++++++++++#
+#            Metrics           #
+# +++++++++++++++++++++++++++++#
+
+# Plugin Metrics Configuration
+# Enabling this will send statistics about the plugin to http://mcstats.org, everything that is collected can be seen on the website here, http://mcstats.org/plugin/EnjinNews.
+
+enable-metrics: true
