@@ -5,3 +5,5 @@ Enjin News is a Bukkit plugin which can fetch the RSS feed from any Enjin websit
 
 ## Bukkit Plugin Page
 http://dev.bukkit.org/bukkit-plugins/enjin-news/
+
+[Bukkit Plugin Page]: http://dev.bukkit.org/bukkit-plugins/enjin-news/
