@@ -4,19 +4,20 @@ import java.util.Arrays;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 public class CommandHandler implements Listener {
 	
-	public Main plugin;
+	public static Main plugin;
 	
 	public CommandHandler(Main plugin){
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-		this.plugin = plugin;
+		CommandHandler.plugin = plugin;
 	}
 	
-	@EventHandler
+	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent e){
 		if(e.getMessage().toLowerCase().startsWith("/news")){
 			e.setCancelled(true);

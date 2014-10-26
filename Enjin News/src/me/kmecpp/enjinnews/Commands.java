@@ -1,6 +1,5 @@
 package me.kmecpp.enjinnews;
 
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +14,7 @@ public class Commands implements CommandExecutor {
 	
 	public static void command(CommandSender sender, String commandLabel, String[] args){
 		if(commandLabel.equalsIgnoreCase("news")){
-			sender.sendMessage(ChatColor.GREEN + RSS.urlAddress);
+			
 		}
 	}
 	
