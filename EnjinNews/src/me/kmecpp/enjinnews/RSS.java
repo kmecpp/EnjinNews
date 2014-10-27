@@ -10,21 +10,21 @@ import java.util.List;
 import me.kmecpp.enjinnews.util.URLShortener;
 
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Player;
+import org.bukkit.command.CommandSender;
 
 public class RSS {
 	
-	public Main plugin;
+	public static Main plugin;
 	public static String urlAddress;
 		
 	public RSS(Main plugin){
-		this.plugin = plugin;
+		RSS.plugin = plugin;
 		urlAddress = plugin.getConfig().getString("news-url");
 		
 	}
 	
 	
-	public static void readRSS(Player player, int number){
+	public static void readRSS(CommandSender player, int number){
 		
 		try {
 			URL rssUrl;
@@ -93,67 +93,70 @@ public class RSS {
 		}
 	}
 	
-	public static void sendTitles(Player player){
-		
-		try {
-			int count = 0;
-			URL rssUrl;
-			rssUrl = new URL(urlAddress);
-			BufferedReader in = new BufferedReader(new InputStreamReader(rssUrl.openStream(), Charset.forName("ISO-8859-1")),2048);
-			String line;
-			List<String> titles = new ArrayList<String>();
-			List<String> dates = new ArrayList<String>();
-			while((line = in.readLine()) != null){
-				if(count < 6){
-					if(line.contains("<title>")){
-						int firstPos = line.indexOf("<title>");
-						String temp = line.substring(firstPos);
-						temp = temp.replace("<title>","");
-						int lastPos = temp.indexOf("</title>");
-						temp = temp.substring(0, lastPos);
-						titles.add(temp);
-						count += 1;
-					}
-				}
-				if(count < 7){
-					if(line.contains("<pubDate>")){
-						int firstPos = line.indexOf("<pubDate>");
-						String temp = line.substring(firstPos);
-						temp = temp.replace("<pubDate>","");
-						int lastPos = temp.indexOf("</pubDate>");
-						temp = temp.substring(0, lastPos);
-						dates.add(temp);
-					}
-				}
-			}
-			in.close();
-			if(titles.isEmpty()){
-				player.sendMessage(ChatColor.RED + "Web server did not nespond!");
-			}else{
-				player.sendMessage(" ");
-				player.sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "News Articles");
-				player.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "-----------------------------------");
-				player.sendMessage(" ");
-				int titleNumber = 0;
-				for(String title : titles){
-					if(title != titles.get(0)){
-						player.sendMessage(ChatColor.RED + String.valueOf(titleNumber + 1) + ") " + ChatColor.GREEN + ChatColor.BOLD.toString() + title);
-						StringBuilder stringbuilder = new StringBuilder();
-						int stringbuildercount = 0;
-						for(String datePart : dates.get(titleNumber).split(" ")){
-							if(stringbuildercount <= 3){
-								stringbuilder.append(datePart + " ");
-								stringbuildercount += 1;
-							}
+	public static void sendTitles(CommandSender player){
+		if(!plugin.getConfig().getString("news-url").toLowerCase().contains("yourwebsite.com")){
+			try {
+				int count = 0;
+				URL rssUrl;
+				rssUrl = new URL(urlAddress);
+				BufferedReader in = new BufferedReader(new InputStreamReader(rssUrl.openStream(), Charset.forName("ISO-8859-1")),2048);
+				String line;
+				List<String> titles = new ArrayList<String>();
+				List<String> dates = new ArrayList<String>();
+				while((line = in.readLine()) != null){
+					if(count < 6){
+						if(line.contains("<title>")){
+							int firstPos = line.indexOf("<title>");
+							String temp = line.substring(firstPos);
+							temp = temp.replace("<title>","");
+							int lastPos = temp.indexOf("</title>");
+							temp = temp.substring(0, lastPos);
+							titles.add(temp);
+							count += 1;
 						}
-						player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.AQUA + "kmecpp " + ChatColor.GOLD + "Date: " + ChatColor.AQUA + stringbuilder.toString());
-						player.sendMessage(" ");
-						titleNumber += 1;
+					}
+					if(count < 7){
+						if(line.contains("<pubDate>")){
+							int firstPos = line.indexOf("<pubDate>");
+							String temp = line.substring(firstPos);
+							temp = temp.replace("<pubDate>","");
+							int lastPos = temp.indexOf("</pubDate>");
+							temp = temp.substring(0, lastPos);
+							dates.add(temp);
+						}
 					}
 				}
+				in.close();
+				if(titles.isEmpty()){
+					player.sendMessage(ChatColor.RED + "Web server did not nespond!");
+				}else{
+					player.sendMessage(" ");
+					player.sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "News Articles");
+					player.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "-----------------------------------");
+					player.sendMessage(" ");
+					int titleNumber = 0;
+					for(String title : titles){
+						if(title != titles.get(0)){
+							player.sendMessage(ChatColor.RED + String.valueOf(titleNumber + 1) + ") " + ChatColor.GREEN + ChatColor.BOLD.toString() + title);
+							StringBuilder stringbuilder = new StringBuilder();
+							int stringbuildercount = 0;
+							for(String datePart : dates.get(titleNumber).split(" ")){
+								if(stringbuildercount <= 3){
+									stringbuilder.append(datePart + " ");
+									stringbuildercount += 1;
+								}
+							}
+							player.sendMessage(ChatColor.GOLD + "Author: " + ChatColor.AQUA + "kmecpp " + ChatColor.GOLD + "Date: " + ChatColor.AQUA + stringbuilder.toString());
+							player.sendMessage(" ");
+							titleNumber += 1;
+						}
+					}
+				}
+			} catch (Exception e) {
+				player.sendMessage(ChatColor.RED + "Web server did not nespond!");
 			}
-		} catch (Exception e) {
-			player.sendMessage(ChatColor.RED + "Web server did not nespond!");
+		}else{
+			player.sendMessage(ChatColor.RED + "An error has occurred! Make sure that you have added your website to the configuration file!");
 		}
 	}
 	

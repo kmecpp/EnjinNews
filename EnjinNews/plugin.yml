@@ -6,6 +6,8 @@ website: dev.bukkit.org/bukkit-plugins/enjin-news/
 description:
    Enjin News is a Bukkit plugin which gets news from your servers Enjin website and displays it to players in game!
 commands:
+   enjinnews:
+      description: Displays the help message
    news:
       description: EnjinNews base command
 permissions:
