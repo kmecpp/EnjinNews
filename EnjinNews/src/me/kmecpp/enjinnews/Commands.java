@@ -19,9 +19,8 @@ public class Commands implements CommandExecutor {
 	}
 	
 	public static void command(CommandSender sender, String commandLabel, String[] args){
+		CommandSender out = sender;
 		if(commandLabel.equalsIgnoreCase("news")){
-			CommandSender out = sender;
-			
 			//Log Command
 			StringBuffer stringBuffer = new StringBuffer();
 			for (int i = 0; i < args.length; i++) {
@@ -48,13 +47,7 @@ public class Commands implements CommandExecutor {
 					out.sendMessage(ChatColor.AQUA + pdfFile.getName() + ChatColor.GREEN + ", version " + ChatColor.AQUA + pdfFile.getVersion()  + ", author: kmecpp");
 					out.sendMessage(ChatColor.GREEN + "Website: " + ChatColor.AQUA + pdfFile.getWebsite());
 				}else if(args[0].equalsIgnoreCase("help")){
-					out.sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "EnjinNews Commands:");
-					out.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "--------------------------------------");
-					out.sendMessage(ChatColor.GREEN + "/news " + ChatColor.AQUA + "Returns the last five news articles posted");
-					out.sendMessage(ChatColor.GREEN + "/news <number> " + ChatColor.AQUA + "Downloads and displays the respective article");
-					out.sendMessage(ChatColor.GREEN + "/news read " + ChatColor.AQUA + "Reads the last article posted");
-					out.sendMessage(ChatColor.GREEN + "/news info " + ChatColor.AQUA + "Provides information on what this plugin is");
-					out.sendMessage(ChatColor.GREEN + "/news help " + ChatColor.AQUA + "Displays this message");
+					displayHelp(out);
 				}else if(args[0].equalsIgnoreCase("reload")){
 					//TODO MAKE COMMAND
 				}else{
@@ -80,7 +73,19 @@ public class Commands implements CommandExecutor {
 					}
 				}
 			}
+		}else if(commandLabel.equalsIgnoreCase("enjinnews")){
+			displayHelp(out);
 		}
+	}
+	
+	public static void displayHelp(CommandSender out){
+		out.sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "EnjinNews Commands:");
+		out.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "--------------------------------------");
+		out.sendMessage(ChatColor.GREEN + "/news " + ChatColor.AQUA + "Returns the last five news articles posted");
+		out.sendMessage(ChatColor.GREEN + "/news <number> " + ChatColor.AQUA + "Downloads and displays the respective article");
+		out.sendMessage(ChatColor.GREEN + "/news read " + ChatColor.AQUA + "Reads the last article posted");
+		out.sendMessage(ChatColor.GREEN + "/news info " + ChatColor.AQUA + "Provides information on what this plugin is");
+		out.sendMessage(ChatColor.GREEN + "/news help " + ChatColor.AQUA + "Displays this message");
 	}
 	
 	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
