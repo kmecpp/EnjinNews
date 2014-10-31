@@ -1,15 +1,15 @@
 name: EnjinNews
 main: me.kmecpp.enjinnews.Main
 author: kmecpp
-version: 0.1
-website: dev.bukkit.org/bukkit-plugins/enjin-news/
+version: 0.6a
+website: dev.bukkit.org/bukkit-plugins/enjinnews/
 description:
    Enjin News is a Bukkit plugin which gets news from your servers Enjin website and displays it to players in game!
 commands:
    enjinnews:
       description: Displays the help message
    news:
-      description: EnjinNews base command
+      description: Base command
 permissions:
    enjinnews.use:
       description: Groups with this permission will be able to use all EnjinNews commands

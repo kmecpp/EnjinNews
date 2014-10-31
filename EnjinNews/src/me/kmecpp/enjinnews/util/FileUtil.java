@@ -25,12 +25,7 @@ public class FileUtil {
 	
 	//News
 	public static void writeToNews(Player player, boolean value, String currentArticle){
-		YamlConfiguration yml = new YamlConfiguration();
-		try {
-			yml.load(new File(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + "News Data" + File.separator + "News.yml"));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		YamlConfiguration yml = loadNewsFile();
 		
 		yml.options().copyDefaults(true);
 		
@@ -46,7 +41,47 @@ public class FileUtil {
 			yml.addDefault("Players."+player.getName()+".Last-Article", currentArticle);
 		}
 		
-		//Save
+		saveNewsFile(yml);
+	}
+	
+	public static Boolean upToDate(Player player){
+		YamlConfiguration yml = loadNewsFile();
+		if(yml.getBoolean("Players."+player.getName()+ ".Up-To-Date")){
+			return true;
+		}
+		return false;
+	}
+	
+	public static String lastArticleRead(Player player){
+		YamlConfiguration yml = loadNewsFile();
+		return yml.getString("Players."+player.getName()+".Last-Article");
+	}
+	
+	public static Boolean NewsDataContains(Player player){
+		YamlConfiguration yml = loadNewsFile();
+		if (yml.contains("Players." + player.getName())) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	
+	//LOAD / SAVE
+	
+	//PRIVATE
+	private static YamlConfiguration loadNewsFile() {
+		YamlConfiguration yml = new YamlConfiguration();
+		try {
+			yml.load(new File(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + "News Data" + File.separator + "News.yml"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return yml;
+	}
+
+	private static void saveNewsFile(YamlConfiguration yml) {
 		yml.options().copyDefaults(true);
 		try {
 			yml.save(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + "News Data" + File.separator + "News.yml");
@@ -55,45 +90,25 @@ public class FileUtil {
 		}
 	}
 	
-	public static Boolean upToDate(Player player){
+	//PUBLIC
+	public static YamlConfiguration loadFile(String filePath) {
 		YamlConfiguration yml = new YamlConfiguration();
 		try {
-			yml.load(new File(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + "News Data" + File.separator + "News.yml"));
-			if(yml.getBoolean("Players."+player.getName()+ ".Up-To-Date")){
-				return true;
-			}else{
-				return false;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
-	
-	public static String lastArticleRead(Player player){
-		YamlConfiguration yml = new YamlConfiguration();
-		try {
-			yml.load(new File(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + "News Data" + File.separator + "News.yml"));
-			return yml.getString("Players."+player.getName()+".Last-Article");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "null";
-		}
-	}
-	
-	public static Boolean NewsDataContains(Player player){
-		YamlConfiguration yml = new YamlConfiguration();
-		try {
-			yml.load(new File(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + "News Data" + File.separator + "News.yml"));
-			if(yml.contains("Players."+player.getName())){
-				return true;
-			}else{
-				return false;
-			}
+			yml.load(new File(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + filePath));
+			yml.options().copyDefaults(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
+		return yml;
 	}
 
+	public static void saveFile(String filePath, YamlConfiguration yml) {
+		yml.options().copyDefaults(true);
+		try {
+			yml.save(Main.plugin.getDataFolder().getAbsolutePath() + File.separator + filePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }

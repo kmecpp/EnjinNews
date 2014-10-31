@@ -37,19 +37,23 @@ public class Commands implements CommandExecutor {
 					out.sendMessage(ChatColor.AQUA + "Fetching RSS feed...");
 					RSS.readRSS(out, 1);
 					if(out instanceof Player){
-						//TODO DON'T WRITE IF ALREADY TRUE
-						FileUtil.writeToNews((Player) out, true, RSS.getCurrentArticle());
+						if(!(FileUtil.upToDate((Player) out))){
+							FileUtil.writeToNews((Player) out, true, RSS.getCurrentArticle());
+						}
 					}
 				}else if(args[0].equalsIgnoreCase("info")){
 					PluginDescriptionFile pdfFile = plugin.getDescription();
 					out.sendMessage(ChatColor.BLUE + ChatColor.BOLD.toString() + "EnjinNews Info");
 					out.sendMessage(ChatColor.GOLD + "--------------------------------------------");
-					out.sendMessage(ChatColor.AQUA + pdfFile.getName() + ChatColor.GREEN + ", version " + ChatColor.AQUA + pdfFile.getVersion()  + ", author: kmecpp");
+					out.sendMessage(ChatColor.GREEN + pdfFile.getName());
+					out.sendMessage(ChatColor.GREEN + "Version: " + ChatColor.AQUA + pdfFile.getVersion());
+					out.sendMessage(ChatColor.GREEN + "Author: " + ChatColor.AQUA + "kmecpp");
 					out.sendMessage(ChatColor.GREEN + "Website: " + ChatColor.AQUA + pdfFile.getWebsite());
 				}else if(args[0].equalsIgnoreCase("help")){
 					displayHelp(out);
 				}else if(args[0].equalsIgnoreCase("reload")){
-					//TODO MAKE COMMAND
+					plugin.reloadConfig();
+					out.sendMessage(ChatColor.GREEN + "Configuration file reloaded!");
 				}else{
 					try{
 						int articleNumber = Integer.parseInt(args[0]);
@@ -63,8 +67,9 @@ public class Commands implements CommandExecutor {
 							out.sendMessage(ChatColor.AQUA + "Fetching RSS feed...");
 							RSS.readRSS(out, articleNumber);
 							if(out instanceof Player && articleNumber == 1){
-								//TODO DON'T WRITE IF ALREADY TRUE
-								FileUtil.writeToNews((Player) out, true, RSS.getCurrentArticle());
+								if(!(FileUtil.upToDate((Player) out))){
+									FileUtil.writeToNews((Player) out, true, RSS.getCurrentArticle());
+								}
 							}
 							
 						}						
@@ -81,10 +86,10 @@ public class Commands implements CommandExecutor {
 	public static void displayHelp(CommandSender out){
 		out.sendMessage(ChatColor.AQUA + ChatColor.BOLD.toString() + "EnjinNews Commands:");
 		out.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "--------------------------------------");
-		out.sendMessage(ChatColor.GREEN + "/news " + ChatColor.AQUA + "Returns the last five news articles posted");
-		out.sendMessage(ChatColor.GREEN + "/news <number> " + ChatColor.AQUA + "Downloads and displays the respective article");
-		out.sendMessage(ChatColor.GREEN + "/news read " + ChatColor.AQUA + "Reads the last article posted");
-		out.sendMessage(ChatColor.GREEN + "/news info " + ChatColor.AQUA + "Provides information on what this plugin is");
+		out.sendMessage(ChatColor.GREEN + "/news " + ChatColor.AQUA + "Returns the five most recent articles");
+		out.sendMessage(ChatColor.GREEN + "/news <number> " + ChatColor.AQUA + "Downloads and displays the specified article");
+		out.sendMessage(ChatColor.GREEN + "/news read " + ChatColor.AQUA + "Reads the most recent news article");
+		out.sendMessage(ChatColor.GREEN + "/news info " + ChatColor.AQUA + "Displays plugin information");
 		out.sendMessage(ChatColor.GREEN + "/news help " + ChatColor.AQUA + "Displays this message");
 	}
 	
