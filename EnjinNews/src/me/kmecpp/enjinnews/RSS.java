@@ -84,7 +84,7 @@ public class RSS {
 				player.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "---------------------------------------");
 				player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + titles.get(number));
 				player.sendMessage(" ");
-				String data = content.get(number - 1);
+				//TODO FORMAT! AND REMOVE HTML!!! String data = content.get(number - 1);
 				player.sendMessage(ChatColor.YELLOW + content.get(number - 1));
 				player.sendMessage(" ");
 			} catch (Exception e) {
