@@ -84,8 +84,9 @@ public class RSS {
 				player.sendMessage(ChatColor.GOLD + ChatColor.BOLD.toString() + "---------------------------------------");
 				player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + titles.get(number));
 				player.sendMessage(" ");
-				//TODO FORMAT! AND REMOVE HTML!!! String data = content.get(number - 1);
-				player.sendMessage(ChatColor.YELLOW + content.get(number - 1));
+				String data = content.get(number - 1);
+				//TODO STRIP HTML FROM DATA
+				player.sendMessage(ChatColor.YELLOW + data);
 				player.sendMessage(" ");
 			} catch (Exception e) {
 				player.sendMessage(ChatColor.RED + "Web server did not nespond!");
