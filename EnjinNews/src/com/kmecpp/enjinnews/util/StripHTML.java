@@ -1,6 +1,6 @@
-package me.kmecpp.enjinnews.util;
+package com.kmecpp.enjinnews.util;
 
-import me.kmecpp.enjinnews.Main;
+import com.kmecpp.enjinnews.Main;
 
 public class StripHTML {
 

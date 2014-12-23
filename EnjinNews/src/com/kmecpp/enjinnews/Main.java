@@ -1,59 +1,63 @@
-package me.kmecpp.enjinnews;
+package com.kmecpp.enjinnews;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-import me.kmecpp.enjinnews.metrics.Metrics;
-import me.kmecpp.enjinnews.util.FileUtil;
+import com.kmecpp.enjinnews.metrics.Metrics;
+import com.kmecpp.enjinnews.util.FileUtil;
+import com.kmecpp.enjinnews.util.RSS;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class Main extends JavaPlugin {
-	
+
 	public static Main plugin;
+
+	public BukkitScheduler scheduler;
 	public final Logger logger = Logger.getLogger("Minecraft");
-	public static FileUtil NewsFile;
-		
-	public void onDisable(){
+	public static File newsFile;
+
+	public void onDisable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " version " + pdfFile.getVersion() + " has been Disabled!");
 	}
-	
-	public void onEnable(){
+
+	public void onEnable() {
 		PluginDescriptionFile pdfFile = this.getDescription();
 		this.logger.info(pdfFile.getName() + " version " + pdfFile.getVersion() + " has been Enabled!");
-		plugin = this;
-		
-		String pluginFolder = getDataFolder().getAbsolutePath();
-		
 		saveDefaultConfig();
-		
-		// News Files
-		(new File(pluginFolder + File.separator + "News Data")).mkdirs();
 
-		NewsFile = new FileUtil(new File(pluginFolder + File.separator
-				+ "News Data" + File.separator + "News.yml"));
-		
-		//Commands
+		String pluginFolder = getDataFolder().getAbsolutePath();
+
+		//SCHEDULER
+		scheduler = Bukkit.getServer().getScheduler();
+
+		// NEWS FILE
+		newsFile = new File(pluginFolder + "userdata.yml");
+		FileUtil.createNewFile(newsFile);
+
+		// COMMANDS
 		getCommand("news").setExecutor(new Commands(this));
 		getCommand("enjinnews").setExecutor(new Commands(this));
-		
-		//Listeners
+
+		// LISTENERS
 		new EventListener(this);
 		new CommandHandler(this);
-		
-		//Files
-		(new File(pluginFolder + File.separator + "News Data")).mkdirs();
 
-		NewsFile = new FileUtil(new File(pluginFolder + File.separator
-				+ "News Data" + File.separator + "News.yml"));
-		
-		//RSS
+		// FILES
+		(new File(pluginFolder + File.separator + "data")).mkdirs();
+		newsFile = new File(pluginFolder + File.separator + "data" + File.separator + "userdata.yml");
+		FileUtil.createNewFile(newsFile);
+
+		// UTILS
 		new RSS(this);
-		
-		//Metrics
+		new FileUtil(this);
+
+		// Metrics
 		if (getConfig().getBoolean("enable-metrics")) {
 			try {
 				Metrics metrics = new Metrics(this);

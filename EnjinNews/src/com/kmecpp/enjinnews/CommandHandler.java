@@ -1,8 +1,8 @@
-package me.kmecpp.enjinnews;
+package com.kmecpp.enjinnews;
 
 import java.util.Arrays;
 
-import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -20,9 +20,14 @@ public class CommandHandler implements Listener {
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onCommandPreprocess(PlayerCommandPreprocessEvent e){
 		if(e.getMessage().toLowerCase().startsWith("/news")){
+			Player player = e.getPlayer();
 			e.setCancelled(true);
-			String[] args = Arrays.copyOfRange(e.getMessage().split(" "), 1, e.getMessage().split(" ").length);
-			Commands.command((CommandSender) e.getPlayer(), e.getMessage().split(" ")[0].replace("/", ""), args);
+			String[] command = e.getMessage().substring(1).split(" ");
+			if(command.length > 1){
+				Commands.runCommand(player, command[0], Arrays.copyOfRange(command, 1, command.length - 1));
+			}else{
+				Commands.runCommand(player, command[0], null);
+			}
 		}
 	}
 }

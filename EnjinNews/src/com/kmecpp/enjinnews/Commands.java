@@ -1,6 +1,7 @@
-package me.kmecpp.enjinnews;
+package com.kmecpp.enjinnews;
 
-import me.kmecpp.enjinnews.util.FileUtil;
+import com.kmecpp.enjinnews.util.FileUtil;
+import com.kmecpp.enjinnews.util.RSS;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -18,8 +19,7 @@ public class Commands implements CommandExecutor {
 		Commands.plugin = plugin;
 	}
 	
-	public static void command(CommandSender sender, String commandLabel, String[] args){
-		CommandSender out = sender;
+	public static void runCommand(CommandSender out, String commandLabel, String[] args){
 		if(commandLabel.equalsIgnoreCase("news")){
 			//Log Command
 			StringBuffer stringBuffer = new StringBuffer();
@@ -37,9 +37,7 @@ public class Commands implements CommandExecutor {
 					out.sendMessage(ChatColor.AQUA + "Fetching RSS feed...");
 					RSS.readRSS(out, 1);
 					if(out instanceof Player){
-						if(!(FileUtil.upToDate((Player) out))){
-							FileUtil.writeToNews((Player) out, true, RSS.getCurrentArticle());
-						}
+						FileUtil.updatePlayer((Player) out);
 					}
 				}else if(args[0].equalsIgnoreCase("info")){
 					PluginDescriptionFile pdfFile = plugin.getDescription();
@@ -67,9 +65,7 @@ public class Commands implements CommandExecutor {
 							out.sendMessage(ChatColor.AQUA + "Fetching RSS feed...");
 							RSS.readRSS(out, articleNumber);
 							if(out instanceof Player && articleNumber == 1){
-								if(!(FileUtil.upToDate((Player) out))){
-									FileUtil.writeToNews((Player) out, true, RSS.getCurrentArticle());
-								}
+								FileUtil.updatePlayer((Player) out);
 							}
 							
 						}						
@@ -93,8 +89,8 @@ public class Commands implements CommandExecutor {
 		out.sendMessage(ChatColor.GREEN + "/news help " + ChatColor.AQUA + "Displays this message");
 	}
 	
-	public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		command(sender, commandLabel, args);
+	public boolean onCommand(CommandSender out, Command command, String commandLabel, String[] args) {
+		runCommand(out, commandLabel, args);
 		return false;
 	}
 }

@@ -26,7 +26,7 @@
  * either expressed or implied, of anybody else.
  */
 
-package me.kmecpp.enjinnews.metrics;
+package com.kmecpp.enjinnews.metrics;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;

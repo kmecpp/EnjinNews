@@ -1,78 +1,90 @@
-package me.kmecpp.enjinnews;
+package com.kmecpp.enjinnews.util;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.kmecpp.enjinnews.util.URLShortener;
+import com.kmecpp.enjinnews.Main;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
 public class RSS {
-	
+
 	public static Main plugin;
-		
-	public RSS(Main plugin){
+
+	public RSS(Main plugin) {
 		RSS.plugin = plugin;
 	}
-	
-	public static void readRSS(CommandSender player, int number){
-		if(isConfigSafe(player)){
+
+	public static void readRSS(CommandSender player, int number) {
+		if (isConfigSafe(player)) {
+			BufferedReader br;
+			InputStream is = null;
+			String line;
 			try {
-				URL rssUrl;
-				rssUrl = new URL(plugin.getConfig().getString("news-url"));
-				BufferedReader in = new BufferedReader(new InputStreamReader(rssUrl.openStream(), Charset.forName("ISO-8859-1")),2048);
-				String line;
+				URL url = new URL(plugin.getConfig().getString("news-url"));
+				URLConnection connection = url.openConnection();
+				connection.setReadTimeout(5000);
+				connection.setConnectTimeout(5000);
+				connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+				connection.addRequestProperty("Content-Type", "application/json");
+				connection.addRequestProperty("Content-Encoding", "gzip");
+				connection.addRequestProperty("Accept", "application/json");
+				connection.addRequestProperty("Connection", "close");
+				is = connection.getInputStream();
+				br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 				List<String> titles = new ArrayList<String>();
 				List<String> content = new ArrayList<String>();
 				List<String> links = new ArrayList<String>();
 				List<String> dates = new ArrayList<String>();
-				while((line = in.readLine()) != null){
-					if(line.contains("<title>")){
-						int firstPos = line.indexOf("<title>");
-						String temp = line.substring(firstPos);
-						temp = temp.replace("<title>","");
-						int lastPos = temp.indexOf("</title>");
-						temp = temp.substring(0, lastPos);
-						titles.add(temp);
-					}
-					if(line.contains("<content:encoded>")){
-						int firstPos = line.indexOf("<content:encoded>");
-						String temp = line.substring(firstPos);
-						temp = temp.replace("<content:encoded>","");
-						int lastPos = temp.indexOf("</content:encoded>");
-						temp = temp.substring(9, lastPos - 3);
-						content.add(temp);
-					}
-					if(line.contains("<link>")){
-						int firstPos = line.indexOf("<link>");
-						String temp = line.substring(firstPos);
-						temp = temp.replace("<link>","");
-						int lastPos = temp.indexOf("</link>");
-						temp = temp.substring(11, lastPos);
-						links.add(temp);
-					}
-					if(line.contains("<pubDate>")){
-						int firstPos = line.indexOf("<pubDate>");
-						String temp = line.substring(firstPos);
-						temp = temp.replace("<pubDate>","");
-						int lastPos = temp.indexOf("</pubDate>");
-						temp = temp.substring(0, lastPos);
-						dates.add(temp);
+				while ((line = br.readLine()) != null) {
+					if (titles.size() <= 6) {
+						if (line.contains("<title>")) {
+							int firstPos = line.indexOf("<title>");
+							String temp = line.substring(firstPos);
+							temp = temp.replace("<title>", "");
+							int lastPos = temp.indexOf("</title>");
+							temp = temp.substring(0, lastPos);
+							titles.add(temp);
+						} else if (line.contains("<link>")) {
+							int firstPos = line.indexOf("<link>");
+							String temp = line.substring(firstPos);
+							temp = temp.replace("<link>", "");
+							int lastPos = temp.indexOf("</link>");
+							temp = temp.substring(11, lastPos);
+							links.add(temp);
+						} else if (line.contains("<pubDate>")) {
+							int firstPos = line.indexOf("<pubDate>");
+							String temp = line.substring(firstPos);
+							temp = temp.replace("<pubDate>", "");
+							int lastPos = temp.indexOf("</pubDate>");
+							temp = temp.substring(0, lastPos);
+							dates.add(temp);
+						} else if (line.contains("<content:encoded>")) {
+							int firstPos = line.indexOf("<content:encoded>");
+							String temp = line.substring(firstPos);
+							int lastPos = temp.indexOf("</content:encoded>");
+							temp = temp.substring(temp.indexOf("[") + 7, lastPos - 3);
+							content.add(temp);
+						}
+					} else {
+						break;
 					}
 				}
-				in.close();
+				is.close();
 				StringBuilder stringbuilder = new StringBuilder();
 				int stringbuildercount = 0;
-				for(String datePart : dates.get(number - 1).split(" ")){
-					if(stringbuildercount <= 3){
+				for (String datePart : dates.get(number - 1).split(" ")) {
+					if (stringbuildercount <= 3) {
 						stringbuilder.append(datePart + " ");
 						stringbuildercount += 1;
 					}
@@ -85,24 +97,23 @@ public class RSS {
 				player.sendMessage(ChatColor.GREEN + ChatColor.BOLD.toString() + titles.get(number));
 				player.sendMessage(" ");
 				String data = content.get(number - 1);
-				//TODO STRIP HTML FROM DATA
-				player.sendMessage(ChatColor.YELLOW + data);
+				for (String paragraph : StripHTML.strip(data).split("\n")) {
+					player.sendMessage(ChatColor.YELLOW + paragraph.substring(paragraph.indexOf("; ") + 1));
+				}
 				player.sendMessage(" ");
 			} catch (Exception e) {
 				player.sendMessage(ChatColor.RED + "Web server did not nespond!");
-
 			}
 		}
 	}
-	
+
 	public static void sendTitles(CommandSender player) {
-		if(isConfigSafe(player)){
+		if (isConfigSafe(player)) {
 			try {
 				int count = 0;
 				URL rssUrl;
 				rssUrl = new URL(plugin.getConfig().getString("news-url"));
-				BufferedReader in = new BufferedReader(new InputStreamReader(
-						rssUrl.openStream(), Charset.forName("ISO-8859-1")), 2048);
+				BufferedReader in = new BufferedReader(new InputStreamReader(rssUrl.openStream(), Charset.forName("ISO-8859-1")), 2048);
 				String line;
 				List<String> titles = new ArrayList<String>();
 				List<String> dates = new ArrayList<String>();
@@ -143,8 +154,7 @@ public class RSS {
 							player.sendMessage(ChatColor.RED + String.valueOf(titleNumber + 1) + ") " + ChatColor.GREEN + ChatColor.BOLD.toString() + title);
 							StringBuilder stringbuilder = new StringBuilder();
 							int stringbuildercount = 0;
-							for (String datePart : dates.get(titleNumber)
-									.split(" ")) {
+							for (String datePart : dates.get(titleNumber).split(" ")) {
 								if (stringbuildercount <= 3) {
 									stringbuilder.append(datePart + " ");
 									stringbuildercount += 1;
@@ -162,19 +172,19 @@ public class RSS {
 			}
 		}
 	}
-	
-	public static boolean isConfigSafe(CommandSender sender){
-		if(!plugin.getConfig().getString("news-url").toLowerCase().contains("yourwebsite.com")){
-			if(plugin.getConfig().getString("news-url").toLowerCase().endsWith("/rss/true")){
-				if(plugin.getConfig().getString("news-url").toLowerCase().startsWith("www.") || !plugin.getConfig().getString("news-url").toLowerCase().startsWith("http://")){
-					try{
+
+	public static boolean isConfigSafe(CommandSender sender) {
+		if (!plugin.getConfig().getString("news-url").toLowerCase().contains("yourwebsite.com")) {
+			if (plugin.getConfig().getString("news-url").toLowerCase().endsWith("/rss/true")) {
+				if (plugin.getConfig().getString("news-url").toLowerCase().startsWith("www.") || !plugin.getConfig().getString("news-url").toLowerCase().startsWith("http://")) {
+					try {
 						BufferedReader br = new BufferedReader(new FileReader(plugin.getDataFolder().getAbsolutePath() + File.separator + "config.yml"));
 						String line;
 						String input = "";
-						while ((line = br.readLine()) != null){
-							if(line.contains("news-url: ")){
-								input += "news-url: http://" + line.split(" ")[1] + '\n'; 
-							}else{
+						while ((line = br.readLine()) != null) {
+							if (line.contains("news-url: ")) {
+								input += "news-url: http://" + line.split(" ")[1] + '\n';
+							} else {
 								input += line + '\n';
 							}
 						}
@@ -188,60 +198,50 @@ public class RSS {
 					}
 					plugin.reloadConfig();
 				}
-			}else{
+			} else {
 				sender.sendMessage(ChatColor.RED + "The URL specified in the EnjinNews configuration file does not seem to have the proper format. It should end with \"/rss/true\"");
 			}
-		}else{
+		} else {
 			sender.sendMessage(ChatColor.RED + "An error has occurred! It doesn't appear that there has been a website added to the EnjinNews configuration file!");
 			return false;
 		}
 		return true;
 	}
-	
-	public static String getCurrentArticle(){
+
+	public static String getCurrentArticle() {
+		BufferedReader br;
+		InputStream is = null;
+		String line;
 		try {
-			URL rssUrl;
-			rssUrl = new URL(plugin.getConfig().getString("news-url"));
-			BufferedReader in = new BufferedReader(new InputStreamReader(rssUrl.openStream(), Charset.forName("ISO-8859-1")),2048);
-			String line;
-			List<String> links = new ArrayList<String>();
-			while((line = in.readLine()) != null){
-				if(line.contains("<link>")){
-					int firstPos = line.indexOf("<link>");
-					String temp = line.substring(firstPos);
-					temp = temp.replace("<link>","");
-					int lastPos = temp.indexOf("</link>");
-					temp = temp.substring(11, lastPos);
-					links.add(temp);
+			URL url = new URL(plugin.getConfig().getString("news-url"));
+			URLConnection connection = url.openConnection();
+			connection.setReadTimeout(5000);
+			connection.setConnectTimeout(5000);
+			connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+			connection.addRequestProperty("Content-Type", "application/json");
+			connection.addRequestProperty("Content-Encoding", "gzip");
+			connection.addRequestProperty("Accept", "application/json");
+			connection.addRequestProperty("Connection", "close");
+			is = connection.getInputStream();
+			br = new BufferedReader(new InputStreamReader(is));
+
+			int count = 0;
+			while ((line = br.readLine()) != null) {
+				if (line.contains("<link>")) {
+					if (count > 0) {
+						int firstPos = line.indexOf("<link>");
+						String temp = line.substring(firstPos);
+						int lastPos = temp.indexOf("</link>");
+						temp = temp.substring(6, lastPos);
+						return temp;
+					} else {
+						count++;
+					}
 				}
 			}
-			return links.get(0);
 		} catch (Exception e) {
-			return null;
+			e.printStackTrace();
 		}
-	}
-	
-	public static Boolean isOnline(){
-		try {
-			URL rssUrl;
-			rssUrl = new URL(plugin.getConfig().getString("news-url"));
-			BufferedReader in = new BufferedReader(new InputStreamReader(rssUrl.openStream(), Charset.forName("ISO-8859-1")),2048);
-			String line;
-			List<String> links = new ArrayList<String>();
-			while((line = in.readLine()) != null){
-				if(line.contains("<link>")){
-					int firstPos = line.indexOf("<link>");
-					String temp = line.substring(firstPos);
-					temp = temp.replace("<link>","");
-					int lastPos = temp.indexOf("</link>");
-					temp = temp.substring(11, lastPos);
-					links.add(temp);
-				}
-			}
-			links.get(0);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
+		return null;
 	}
 }

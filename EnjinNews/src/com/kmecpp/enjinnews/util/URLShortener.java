@@ -1,4 +1,4 @@
-package me.kmecpp.enjinnews.util;
+package com.kmecpp.enjinnews.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;
