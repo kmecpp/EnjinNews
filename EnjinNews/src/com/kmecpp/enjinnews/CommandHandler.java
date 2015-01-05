@@ -23,7 +23,7 @@ public class CommandHandler implements Listener {
 			Player player = e.getPlayer();
 			e.setCancelled(true);
 			String[] command = e.getMessage().substring(1).split(" ");
-			if(command.length > 1){
+			if(command.length > 0){
 				Commands.runCommand(player, command[0], Arrays.copyOfRange(command, 1, command.length - 1));
 			}else{
 				Commands.runCommand(player, command[0], null);
