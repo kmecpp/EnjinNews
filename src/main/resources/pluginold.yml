@@ -7,6 +7,7 @@ description:
    Enjin News is a Bukkit plugin which gets news from your servers Enjin website and displays it to players in game!
 commands:
    enjinnews:
+      aliases: [enews, news]
       description: Displays the help message
    news:
       description: Base command

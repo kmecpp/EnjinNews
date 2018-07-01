@@ -1,10 +1,8 @@
 package com.kmecpp.enjinnews.util;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -17,13 +15,11 @@ public class URLShortener {
 			URLConnection conn = new URL(api).openConnection();
 			conn.setDoOutput(true);
 			conn.setRequestProperty("Content-Type", "application/json");
-			OutputStreamWriter wr = new OutputStreamWriter(
-					conn.getOutputStream());
+			OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
 			wr.write("{\"longUrl\":\"" + longUrl + "\"}");
 			wr.flush();
 
-			BufferedReader rd = new BufferedReader(new InputStreamReader(
-					conn.getInputStream()));
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			String line;
 			while ((line = rd.readLine()) != null) {
 				if (line.indexOf("id") > -1) {
@@ -32,8 +28,8 @@ public class URLShortener {
 			}
 			wr.close();
 			rd.close();
-		} catch (MalformedURLException localMalformedURLException) {
-		} catch (IOException localIOException) {
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return shortUrl;
 	}

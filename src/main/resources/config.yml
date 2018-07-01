@@ -1,0 +1,11 @@
+# Configuration File For EnjinNews. Created By, kmecpp
+
+# Enjin API URL. Visit https://www.example.com/admin/settings/api
+api-url: http://www.example.com/api/v1/api.php
+
+# This is the API key for your Enjin site. You MUST enable all news permissions for the plugin to work correctly.
+api-key: 
+
+# Setting debug to true will print more plugin related information to the console to help diagnose problems
+debug: false
+
