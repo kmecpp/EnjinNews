@@ -9,6 +9,20 @@ public class EnjinNews extends OsmiumPlugin {
 
 	public static final String NAME = "EnjinNews";
 
+	/*
+	 * 
+	 * TODO:
+	 * 
+	 * Commands:
+	 * news read <number>
+	 * news list
+	 * news sync
+	 * 
+	 * Config:
+	 * 
+	 * 
+	 */
+
 	@PluginInstance
 	public static EnjinNews plugin;
 
