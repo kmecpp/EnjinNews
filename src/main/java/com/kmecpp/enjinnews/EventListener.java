@@ -2,7 +2,7 @@ package com.kmecpp.enjinnews;
 
 import java.util.ArrayList;
 
-import com.kmecpp.osmium.api.Player;
+import com.kmecpp.osmium.api.entity.Player;
 import com.kmecpp.osmium.api.event.Listener;
 import com.kmecpp.osmium.api.event.events.PlayerJoinEvent;
 

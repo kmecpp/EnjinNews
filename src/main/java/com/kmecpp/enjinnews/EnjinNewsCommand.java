@@ -1,7 +1,6 @@
 package com.kmecpp.enjinnews;
 
 import com.kmecpp.osmium.api.command.Command;
-import com.kmecpp.osmium.api.command.CommandEvent;
 import com.kmecpp.osmium.api.command.OsmiumCommand;
 
 @Command(aliases = { "enjinnews", "enews", "en" },
@@ -9,19 +8,28 @@ import com.kmecpp.osmium.api.command.OsmiumCommand;
 public class EnjinNewsCommand extends OsmiumCommand {
 
 	@Override
-	public void execute(CommandEvent e) {
-
-	}
-
-	@Override
 	public void configure() {
-		//		registerArg("name");
+		enableCommmandList("EnjinNews Commands");
+
+		add("read");
+		add("list");
+		add("sync");
 
 	}
 
-	@Command(aliases = "read")
-	public void read(CommandEvent e) {
-
-	}
+	//	@Override
+	//	public void configure() {
+	//		//		registerArg("name");
+	//	}
+	//
+	//	@Override
+	//	public void execute(CommandEvent e) {
+	//
+	//	}
+	//
+	//	@Command(aliases = "read")
+	//	public void read(CommandEvent e) {
+	//
+	//	}
 
 }
