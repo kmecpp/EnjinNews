@@ -14,7 +14,6 @@ public class EnjinNewsCommand extends OsmiumCommand {
 		add("read");
 		add("list");
 		add("sync");
-
 	}
 
 	//	@Override
