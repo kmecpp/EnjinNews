@@ -4,7 +4,6 @@ import com.kmecpp.osmium.Osmium;
 import com.kmecpp.osmium.api.plugin.OsmiumPlugin;
 import com.kmecpp.osmium.api.plugin.Plugin;
 import com.kmecpp.osmium.api.plugin.PluginInstance;
-import com.kmecpp.osmium.api.tasks.OsmiumTask;
 
 @Plugin(name = EnjinNews.NAME, version = "1.0", authors = { "kmecpp" })
 public class EnjinNews extends OsmiumPlugin {
@@ -31,7 +30,12 @@ public class EnjinNews extends OsmiumPlugin {
 	@Override
 	public void init() {
 		setDefaultConfig(Config.class);
-		//		Osmium.execute(this)
+		Osmium.schedule(this)
+				.setInterval(10)
+				.setExecutor((task) -> {
+
+				})
+				.start();
 	}
 
 	//	@Override

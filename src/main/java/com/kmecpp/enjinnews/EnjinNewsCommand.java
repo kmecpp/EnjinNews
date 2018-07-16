@@ -9,7 +9,7 @@ public class EnjinNewsCommand extends OsmiumCommand {
 
 	@Override
 	public void configure() {
-		enableCommmandList("EnjinNews Commands");
+		setTitle("EnjinNews Commands");
 
 		add("read");
 		add("list");
